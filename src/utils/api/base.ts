@@ -1,0 +1,1 @@
+export const baseAPI = "https://discord.com/api/v9/users/@me/guilds";
