@@ -12,6 +12,7 @@ type DiscordContextValue = {
     /** User's internal access Token */
     userToken: string;
     setUserToken(token: string): void;
+    logout(): void;
     /** loading */
     loading: boolean;
     setLoading(loading: boolean): void;
@@ -52,8 +53,10 @@ export const DiscordProvider = ({children}) => {
         patchAllNotifSettings(userToken, guilds).then(() => {
             setLoading(false);
             setUpdated(false);
+            setError(undefined);
         }).catch(err => {
             setLoading(false);
+            console.log(err)
             setError(err.message)
         });
     }
@@ -65,11 +68,20 @@ export const DiscordProvider = ({children}) => {
                 setGuilds(g);
                 setLoading(false);
                 setUpdated(true);
+                setError(undefined);
             })
         }).catch(err => {
             setError(err.message)
+            console.log(err)
             setLoading(false)
         })
+    }
+
+    const logout = () => {
+        setUserToken(undefined)
+        localStorage.removeItem("userToken")
+        setError(undefined);
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -91,6 +103,7 @@ export const DiscordProvider = ({children}) => {
         setGuilds,
         userToken,
         setUserToken, 
+        logout,
         loading,
         setLoading,
         error,
@@ -100,7 +113,7 @@ export const DiscordProvider = ({children}) => {
         saveNotifPreferences,
         loadGuilds
     }),
-    [guilds, userToken, loading, error, updated, updateNotifPreferences, saveNotifPreferences, loadGuilds])
+    [guilds, userToken, logout, loading, error, updated, updateNotifPreferences, saveNotifPreferences, loadGuilds])
 
     return <DiscordContext.Provider value={value}>{children}</DiscordContext.Provider>
 }

@@ -10,10 +10,26 @@ export default function SetUp() {
     const {guilds, setGuilds, userToken, setUserToken, loading, setLoading, error, setError, updated, updateNotifPreferences, saveNotifPreferences, loadGuilds } = useDiscord();
 
     useEffect(() => {
-        if (userToken && !guilds) {
+        if (userToken && !guilds && !error) {
             loadGuilds();
         }
-    }, [userToken, guilds, setGuilds, setLoading, setError, loading, loadGuilds])
+    }, [userToken, guilds, setGuilds, setLoading, setError, loading, loadGuilds, error])
+
+    if (error && !loading) {
+        return (
+            <Box>
+                <Text color="red">
+                    hey, there is an error
+                    <br/> 
+                    and we are not really good at fixing erros, so...
+                    <br/>
+                    just go ahead and spam the {"'stop using my token'"} button or refresh the page
+                    <br/>
+                    we would appreciate it, thanks
+                    </Text>
+            </Box>
+        )
+    }
     
     return (
         <Box>
@@ -29,11 +45,9 @@ export default function SetUp() {
                         <Text> {"we'll completely mute the rest..."}</Text>
                     </Stack>
                     <Skeleton loading={!guilds}>
-                        {guilds &&
                             <Stack direction="horizontal">
-                                {guilds.map((guild) => (<GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateNotifPreferences(guild.guild.id)}/>))}
+                                {guilds && guilds.map((guild) => (<GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateNotifPreferences(guild.guild.id)}/>))}
                             </Stack>
-                        }
                     </Skeleton>
                     <Stack>
                         {updated && <Text> {"when you're ready... click save."}</Text> }

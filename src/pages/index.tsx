@@ -1,13 +1,12 @@
-import { Box, Input, Stack, Text, useTheme } from 'degen';
+import { Box, Button, IconClose, Stack, Stat, Text } from 'degen';
 import Head from 'next/head';
-import React, { useEffect } from 'react';
-import Dashboard from '../components/screens/dashboard';
+import React from 'react';
 import SetUp from '../components/screens/setup';
 import { useDiscord } from '../utils/context/discord';
 
 export default function Home() {
 
-  const { guilds, userToken, setGuilds, setUserToken } = useDiscord();
+  const { logout } = useDiscord();
 
   return (
     <div>
@@ -15,7 +14,12 @@ export default function Home() {
         <title>FDN</title>
       </Head>
 
-      <Box backgroundColor="background" minHeight="viewHeight" maxWidth="viewWidth" paddingTop="32" paddingX="32" >
+      <Box backgroundColor="background" minHeight="viewHeight" maxWidth="viewWidth" paddingX="32" >
+          <Box display="flex" height="40" padding="8" justifyContent="flex-end" alignItems="center">
+            <Stack>
+              <Button onClick={() => {logout()}} variant="secondary" size="small" suffix={<IconClose/>}> stop using my token... </Button>
+            </Stack>
+          </Box>
           <Stack space='24'>
             <Stack>
               <Text size="headingOne" weight="bold" color="foreground"> Hey! </Text>
