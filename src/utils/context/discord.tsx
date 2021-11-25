@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useEffect, useMemo, useState } from "react"
 import { getRawGuilds } from "../api/guilds"
-import { loadNotifSettings, patchAllNotifSettings } from "../api/notifications"
+import { patchAllNotifSettings } from "../api/notifications"
 import { Guild, notifPreferences } from "../types/discord"
 
 
@@ -41,7 +41,7 @@ export const DiscordProvider = ({children}) => {
     const updateNotifPreferences = (guildId: string) => {
         setGuilds(guilds.map(guild => {
             if (guild.guild.id === guildId) {
-                guild.notifPreferences = (guild.notifPreferences === notifPreferences.Important) ? notifPreferences.NotImportant : notifPreferences.Important;
+                guild.notifPreferences = (JSON.stringify(guild.notifPreferences) === JSON.stringify(notifPreferences.Important)) ? notifPreferences.NotImportant : notifPreferences.Important;
                 setUpdated(true)
             }
             return guild
@@ -49,8 +49,18 @@ export const DiscordProvider = ({children}) => {
     }
 
     const saveNotifPreferences = () => {
+        const cachedGuilds = (JSON.parse(localStorage.getItem('cachedGuilds')) || []).sort((a, b) => a.guild.id - b.guild.id);
+        const guildsToUpdate = cachedGuilds.length > 0 ?
+            guilds.sort((a: any, b: any) => a.guild.id - b.guild.id).filter((guild, index) => {
+                return JSON.stringify(guild.notifPreferences) !== JSON.stringify(cachedGuilds[index].notifPreferences);
+            })
+            :
+            guilds
+
+        console.log(guildsToUpdate);
         setLoading(true);
-        patchAllNotifSettings(userToken, guilds).then(() => {
+        patchAllNotifSettings(userToken, guildsToUpdate).then(() => {
+            localStorage.setItem('cachedGuilds', JSON.stringify(guilds))
             setLoading(false);
             setUpdated(false);
             setError(undefined);
@@ -63,23 +73,33 @@ export const DiscordProvider = ({children}) => {
 
     const loadGuilds = () => {
         setLoading(true);
-        getRawGuilds(userToken).then((guilds) => {
-            loadNotifSettings(userToken, guilds).then(g => {
-                setGuilds(g);
+        const cachedGuilds = JSON.parse(localStorage.getItem('cachedGuilds'))
+        if (!guilds && cachedGuilds) {
+            setGuilds(cachedGuilds);
+            setLoading(false);
+            setUpdated(false);
+        } else {
+            getRawGuilds(userToken).then((guilds) => {
+                setGuilds(guilds.map(guild => ({
+                    guild,
+                    notifPreferences: notifPreferences.NotImportant
+                })));
                 setLoading(false);
-                setUpdated(true);
                 setError(undefined);
+                setUpdated(true);
+            }).catch(err => {
+                (err.message !== 'Request failed with status code 429') && setError(err.message)
+                console.log(err.message)
+                setLoading(false)
             })
-        }).catch(err => {
-            (err.message !== 'Request failed with status code 429') && setError(err.message)
-            console.log(err.message)
-            setLoading(false)
-        })
+        }
     }
 
     const logout = () => {
         setUserToken(undefined)
         localStorage.removeItem("userToken")
+        localStorage.removeItem("cachedGuilds")
+        setGuilds(undefined)
         setError(undefined);
         setLoading(false);
     }

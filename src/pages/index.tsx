@@ -14,7 +14,7 @@ export default function Home() {
         <title>FDN</title>
       </Head>
 
-      <Box backgroundColor="background" minHeight="viewHeight" maxWidth="viewWidth" paddingX="32" >
+      <Box backgroundColor="background" minHeight="viewHeight" maxWidth="viewWidth" paddingX="32" paddingBottom="24">
           <Box display="flex" height="40" padding="8" justifyContent="flex-end" alignItems="center">
             <Stack>
               <Button onClick={() => {logout()}} variant="secondary" size="small" suffix={<IconClose/>}> stop using my token... </Button>

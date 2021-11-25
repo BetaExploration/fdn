@@ -3,12 +3,11 @@ import React, { useEffect, useRef } from "react";
 import { useDiscord } from "../../utils/context/discord";
 import useModal from "../../utils/hooks/useModal";
 import GuildElem from "../base/guildElem";
+import Error from "../base/error";
+import InputUserToken from "../base/inputUserToken";
 
 
 export default function SetUp() {
-    const input = useRef<HTMLInputElement>(null);
-    const modal = useRef(null);
-    const { modalOpen, setModalOpen } = useModal(modal, false);
 
     const {guilds, setGuilds, userToken, setUserToken, loading, setLoading, error, setError, updated, updateNotifPreferences, saveNotifPreferences, loadGuilds } = useDiscord();
 
@@ -19,36 +18,14 @@ export default function SetUp() {
     }, [userToken, guilds, setGuilds, setLoading, setError, loading, loadGuilds, error])
 
     if (error && !loading && !guilds) {
-        return (
-            <Box>
-                <Text color="red">
-                    hey, there is an error.
-                    <br/> 
-                    you probably {"didn't"} input the right token...
-                    <br/>
-                    and we are not really good at fixing erros, so...
-                    <br/>
-                    just go ahead and spam the <Text color="red" weight="bold" size="large" as="span"> {"'STOP USING MY TOKEN'"} </Text> button or refresh the page
-                    <br/>
-                    we would appreciate it, thanks
-                    </Text>
-            </Box>
-        )
+        return <Error/>
     }
     
     return (
         <>
             <Box>
                 { !userToken ?
-                    <Stack direction="horizontal" align="flex-end">
-                        <Input ref={input} placeholder="don't worry... we won't steal it :)" label={
-                            <Stack align="center" direction="horizontal">
-                                <Text size="base" weight="medium"> {"your very secret internal access token please..."} </Text>
-                                <Button onClick={() => setModalOpen(true)} size="small" shape="circle" variant="transparent"><IconExclamation/></Button>
-                            </Stack>
-                        }/>
-                        <Button onClick={() => setUserToken(input.current.value)}> lez,go </Button>
-                    </Stack>
+                    <InputUserToken/>
                 : 
                     <Stack space="6">
                         <Stack space="0">
@@ -67,28 +44,6 @@ export default function SetUp() {
                     </Stack>
                 }
             </Box>
-            
-            <Modal wrapper={modal} isOpen={modalOpen} />
-
         </>
-    )
-}
-
-export const Modal = ({wrapper, isOpen}) => {
-
-    return (
-        <>{isOpen && 
-            <Box position="absolute" top="0" left="0" width="viewWidth" height="viewHeight" display="flex" justifyContent="center" alignItems="center" backgroundColor="foregroundSecondary" style={{opacity: "10"}}>
-                <Box ref={wrapper} width="80" height="80" backgroundColor="background" borderRadius="large" padding="6">
-                <Stack>
-                    <Text> 
-                        {"hey, you're not supposed to be here..."}
-                        <br/>
-                        {"this is where you find out how to get your access token"}
-                    </Text>
-                </Stack>
-                </Box>
-            </Box>  
-        }</>
     )
 }
