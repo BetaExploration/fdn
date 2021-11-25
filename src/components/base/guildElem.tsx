@@ -10,7 +10,7 @@ export default function GuildElem({ id, name, icon, notifPreference, handleNotif
     
     return (
         <>
-            <Box data-tip={name} onClick={() => handleNotifPreferenceChange(id)} width="14" height="14" borderRadius="full" borderWidth="1" borderColor={notifPreference === notifPreferences.Important ? 'accent' : 'foregroundSecondary'} cursor="pointer" display="flex" justifyContent="center" alignItems="center">
+            <Box data-tip={name} onClick={() => handleNotifPreferenceChange(id)} width="14" height="14" margin="2" borderRadius="full" borderWidth="1" borderColor={notifPreference === notifPreferences.Important ? 'accent' : 'foregroundSecondary'} cursor="pointer" display="flex" justifyContent="center" alignItems="center">
                 <Avatar noBorder label={name} size="12" src={cdn} placeholder={icon === null}/>
             </Box>
             <ReactTooltip place="bottom" effect="solid"/>

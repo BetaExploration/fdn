@@ -18,15 +18,17 @@ export default function SetUp() {
         }
     }, [userToken, guilds, setGuilds, setLoading, setError, loading, loadGuilds, error])
 
-    if (error && !loading) {
+    if (error && !loading && !guilds) {
         return (
             <Box>
                 <Text color="red">
-                    hey, there is an error
+                    hey, there is an error.
                     <br/> 
+                    you probably {"didn't"} input the right token...
+                    <br/>
                     and we are not really good at fixing erros, so...
                     <br/>
-                    just go ahead and spam the {"'stop using my token'"} button or refresh the page
+                    just go ahead and spam the <Text color="red" weight="bold" size="large" as="span"> {"'STOP USING MY TOKEN'"} </Text> button or refresh the page
                     <br/>
                     we would appreciate it, thanks
                     </Text>
@@ -48,15 +50,15 @@ export default function SetUp() {
                         <Button onClick={() => setUserToken(input.current.value)}> lez,go </Button>
                     </Stack>
                 : 
-                    <Stack space="14">
+                    <Stack space="6">
                         <Stack space="0">
                             <Text> {"click on the server's that matter to you!"}</Text>
                             <Text> {"we'll completely mute the rest..."}</Text>
                         </Stack>
                         <Skeleton loading={!guilds}>
-                                <Stack direction="horizontal">
-                                    {guilds && guilds.map((guild) => (<GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateNotifPreferences(guild.guild.id)}/>))}
-                                </Stack>
+                            <Box width="full" flexWrap="wrap" display="flex" marginBottom="6">
+                                {guilds && guilds.map((guild) => (<GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateNotifPreferences(guild.guild.id)}/>))}
+                            </Box>
                         </Skeleton>
                         <Stack>
                             {updated && <Text> {"when you're ready... click save."}</Text> }
