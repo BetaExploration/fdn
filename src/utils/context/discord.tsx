@@ -79,6 +79,7 @@ export const DiscordProvider = ({children}) => {
 
     const logout = () => {
         setUserToken(undefined)
+        setGuilds(undefined)
         localStorage.removeItem("userToken")
         setError(undefined);
         setLoading(false);
