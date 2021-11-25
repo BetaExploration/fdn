@@ -22,15 +22,15 @@ export const notifPreferences = {
   Important: {
     "suppress_everyone": false,
     "suppress_roles": false,
-    "message_notifications": 0,
+    "message_notifications": 1,
     "mobile_push": true,
     "muted": false,
   },
   NotImportant: {
     "suppress_everyone": true,
     "suppress_roles": true,
-    "message_notifications": 2,
-    "mobile_push": false,
+    // "message_notifications": 2,
+    // "mobile_push": false,
     "muted": true,
   },
   Empty: {}
