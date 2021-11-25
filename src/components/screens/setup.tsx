@@ -1,63 +1,44 @@
 import { Box, Button, Input, Skeleton, Stack, Text } from "degen";
-import React, { useEffect, useRef, useState } from "react";
-import { getRawGuilds } from "../../utils/api/guilds";
+import React, { useEffect, useRef } from "react";
 import { useDiscord } from "../../utils/context/discord";
-import { Guild, notifPreferences, rawGuild } from "../../utils/types/discord";
 import GuildElem from "../base/guildElem";
 
 
 export default function SetUp() {
     const input = useRef<HTMLInputElement>(null);
 
-    const {userToken, setUserToken, loading, setLoading, error, setError, submitInitialNotifPreferences } = useDiscord();
-    const [ initialGuilds, setInitialGuilds ] = useState<Guild[]>(undefined);
+    const {guilds, setGuilds, userToken, setUserToken, loading, setLoading, error, setError, updated, updateNotifPreferences, saveNotifPreferences, loadGuilds } = useDiscord();
 
     useEffect(() => {
-        if (userToken) {
-            setLoading(true)
-            getRawGuilds(userToken).then((guilds) => {
-                setInitialGuilds(guilds.map(guild => ({
-                    guild,
-                    notifPreferences: notifPreferences.NotImportant
-                })));
-                console.log(guilds)
-                setLoading(false)
-                console.log(loading)
-            }).catch(err => {
-                setError(err.message)
-                setLoading(false)
-            })
+        if (userToken && !guilds) {
+            loadGuilds();
         }
-    }, [loading, setError, setLoading, userToken])
-
-    const setImportant = (guild_id: string) => {
-        setInitialGuilds(initialGuilds.map(guild => {
-            if (guild.guild.id === guild_id) {
-                (guild.notifPreferences === notifPreferences.Important) ? guild.notifPreferences = notifPreferences.NotImportant : guild.notifPreferences = notifPreferences.Important;
-            }
-            return guild
-        }))
-    }
+    }, [userToken, guilds, setGuilds, setLoading, setError, loading, loadGuilds])
     
     return (
         <Box>
-            { !initialGuilds ? 
+            { !userToken ?
                 <Stack direction="horizontal" align="flex-end">
-                    <Input ref={input} label="your very important internal access token... please?"/>
+                    <Input ref={input} placeholder="don't worry... we won't steal it :)" label="your very important internal access token... please?"/>
                     <Button onClick={() => setUserToken(input.current.value)}> lez,go </Button>
                 </Stack>
-            :
-                <Stack space="12">
+            : 
+                <Stack space="14">
                     <Stack space="0">
                         <Text> {"click on the server's that matter to you!"}</Text>
-                        <Text> {"when you're ready... click ready."}</Text>
+                        <Text> {"we'll completely mute the rest..."}</Text>
                     </Stack>
-                    <Skeleton loading={loading}>
-                        <Stack direction="horizontal">
-                            {initialGuilds.map((guild) => (<GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={setImportant}/>))}
-                        </Stack>
+                    <Skeleton loading={!guilds}>
+                        {guilds &&
+                            <Stack direction="horizontal">
+                                {guilds.map((guild) => (<GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateNotifPreferences(guild.guild.id)}/>))}
+                            </Stack>
+                        }
                     </Skeleton>
-                    <Button loading={loading} onClick={() => submitInitialNotifPreferences(initialGuilds)}> Ready? </Button>
+                    <Stack>
+                        {updated && <Text> {"when you're ready... click save."}</Text> }
+                        <Button disabled={!guilds || !updated} loading={loading} onClick={() => (saveNotifPreferences())}> {updated ? 'save?' : 'nothing to change'} </Button>
+                    </Stack>
                 </Stack>
             }
         </Box>

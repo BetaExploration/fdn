@@ -15,7 +15,8 @@ export type Guild = {
 
 export type notifPreference =
   | typeof notifPreferences.Important
-  | typeof notifPreferences.NotImportant;
+  | typeof notifPreferences.NotImportant
+  | typeof notifPreferences.Empty;
 
 export const notifPreferences = {
   Important: {
@@ -32,4 +33,5 @@ export const notifPreferences = {
     "mobile_push": false,
     "muted": true,
   },
+  Empty: {}
 } as const;

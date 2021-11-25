@@ -1,5 +1,10 @@
 import axios from "axios";
-import { Guild, notifPreference } from "../types/discord";
+import {
+  Guild,
+  notifPreference,
+  notifPreferences,
+  rawGuild,
+} from "../types/discord";
 import { baseAPI } from "./base";
 
 export const patchAllNotifSettings = async (token: string, guilds: Guild[]) => {
@@ -15,22 +20,45 @@ export const patchAllNotifSettings = async (token: string, guilds: Guild[]) => {
     );
   });
 
-  let updatedSettings = await axios.all(requests);
-  return mapAxiosToNotifSettings(updatedSettings);
+  await axios.all(requests);
 };
 
-export const patchNotifSettings = async (token: string, guild_id: string, notifPreference) => {
-  const request = await axios.patch(`${baseAPI}/${guild_id}/settings`,
-        notifPreference,
-        {
-            headers: {
-                Authorization: `${token}`,
-            },
-        }
+export const loadNotifSettings = async (token: string, guilds: rawGuild[]) => {
+  const requests = guilds.map((guild) => {
+    return axios.patch(
+      `${baseAPI}/${guild.id}/settings`,
+      {},
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
     );
+  });
 
-    let updatedSettings = request.data;
-    return mapAxiosToNotifSettings(updatedSettings)[0];
+  let preferences = await axios
+    .all(requests)
+    .then(
+      axios.spread((...responses) => {
+        console.log(
+          mapAxiosToNotifSettings(responses.map((response) => response.data))
+        );
+        return mapAxiosToNotifSettings(
+          responses.map((response) => response.data)
+        );
+      })
+    )
+    .catch((errors) => {
+      // react on errors.
+    });
+
+  return guilds.map((guild, index) => ({
+    guild,
+    notifPreferences:
+      JSON.stringify(preferences[index]) === JSON.stringify(notifPreferences.Important)
+        ? notifPreferences.Important
+        : notifPreferences.NotImportant,
+  }));
 };
 
 const mapAxiosToNotifSettings = (settings: any[]): notifPreference[] => {

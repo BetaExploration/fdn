@@ -1,5 +1,7 @@
-import React, { createContext, useMemo, useState } from "react"
-import { patchAllNotifSettings, patchNotifSettings } from "../api/notifications"
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { createContext, useEffect, useMemo, useState } from "react"
+import { getRawGuilds } from "../api/guilds"
+import { loadNotifSettings, patchAllNotifSettings } from "../api/notifications"
 import { Guild, notifPreferences } from "../types/discord"
 
 
@@ -7,14 +9,23 @@ type DiscordContextValue = {
     /** List of guilds a user is a part of */
     guilds: Guild[];
     setGuilds(guilds: Guild[]): void;
+    /** User's internal access Token */
     userToken: string;
     setUserToken(token: string): void;
+    /** loading */
     loading: boolean;
     setLoading(loading: boolean): void;
+    /** error */
     error: string;
     setError(error: string): void;
+    /** local object has been updated */
+    updated: boolean;
+    /** method to update a guilds notif prefences locally */
     updateNotifPreferences(guildId: string): void;
-    submitInitialNotifPreferences(initialGuilds: Guild[]): void;
+    /** method to batch update all servers */
+    saveNotifPreferences(): void;
+    /** method to load guild list */
+    loadGuilds(): void;
 }
 
 const DiscordContext = createContext<DiscordContextValue | null>(null)
@@ -24,34 +35,56 @@ export const DiscordProvider = ({children}) => {
     const [userToken, setUserToken] = useState<string>(undefined)
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>(undefined)
+    const [updated, setUpdated] = useState<boolean>(false)
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const updateNotifPreferences = (guildId: string) => {
         setGuilds(guilds.map(guild => {
             if (guild.guild.id === guildId) {
-                setLoading(true);
-                patchNotifSettings('OTEzMTQyNDc3MzQxNDg3MTI0.YZ6MTw.imfyxE_0uTigEKMg2dMfEAEQn8U', guild.guild.id, (guild.notifPreferences === notifPreferences.Important) ? guild.notifPreferences = notifPreferences.NotImportant : guild.notifPreferences = notifPreferences.Important).then((updatedPrefence) => {
-                    guild.notifPreferences = updatedPrefence
-                    setLoading(false);
-                }).catch(err => {
-                    setLoading(false);
-                    setError(err.message)
-                })
+                guild.notifPreferences = (guild.notifPreferences === notifPreferences.Important) ? notifPreferences.NotImportant : notifPreferences.Important;
+                setUpdated(true)
             }
             return guild
         }))
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const submitInitialNotifPreferences = (initialGuilds: Guild[]) => {
+    const saveNotifPreferences = () => {
         setLoading(true);
-        patchAllNotifSettings(userToken, initialGuilds ).then((guilds) => {
+        patchAllNotifSettings(userToken, guilds).then(() => {
             setLoading(false);
+            setUpdated(false);
         }).catch(err => {
             setLoading(false);
             setError(err.message)
         });
     }
+
+    const loadGuilds = () => {
+        setLoading(true);
+        getRawGuilds(userToken).then((guilds) => {
+            loadNotifSettings(userToken, guilds).then(g => {
+                setGuilds(g);
+                setLoading(false);
+                setUpdated(true);
+            })
+        }).catch(err => {
+            setError(err.message)
+            setLoading(false)
+        })
+    }
+
+    useEffect(() => {
+        if (!userToken) {
+            try {
+                setUserToken(localStorage.getItem('userToken'));
+                
+            } catch {
+                setUserToken(undefined);
+            }
+        }
+        if (userToken && localStorage.getItem('userToken') === null) {
+            localStorage.setItem('userToken', userToken);
+        }
+    }, [userToken])
 
     const value = useMemo(() => ({
         guilds,
@@ -62,16 +95,18 @@ export const DiscordProvider = ({children}) => {
         setLoading,
         error,
         setError,
+        updated,
         updateNotifPreferences,
-        submitInitialNotifPreferences
+        saveNotifPreferences,
+        loadGuilds
     }),
-    [guilds, userToken, loading, error, updateNotifPreferences, submitInitialNotifPreferences])
+    [guilds, userToken, loading, error, updated, updateNotifPreferences, saveNotifPreferences, loadGuilds])
 
     return <DiscordContext.Provider value={value}>{children}</DiscordContext.Provider>
 }
 
 export const useDiscord = () => {
   const context = React.useContext(DiscordContext)
-  if (!context) throw Error('Must be used within ThemeProvider')
+  if (!context) throw Error('Must be used within DiscordProvider')
   return context
 }

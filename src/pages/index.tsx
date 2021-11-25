@@ -24,11 +24,7 @@ export default function Home() {
             <Stack space="8">
               <Text size="extraLarge" weight="medium" color="foreground"> {"let's fix that real quick:"} </Text>
 
-              { guilds && !userToken ? 
-                <Dashboard/>
-              :
-                <SetUp/>
-              }
+              <SetUp />
 
             </Stack>
           </Stack>
