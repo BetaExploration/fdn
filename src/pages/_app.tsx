@@ -6,7 +6,7 @@ import { DiscordProvider } from '../utils/context/discord'
 function MyApp({ Component, pageProps }) {
   return (
       <DiscordProvider>
-        <ThemeProvider defaultMode={'dark'} defaultAccent="green">
+        <ThemeProvider defaultMode={'dark'} defaultAccent="indigo">
           <Component {...pageProps} />
         </ThemeProvider>
       </DiscordProvider>
