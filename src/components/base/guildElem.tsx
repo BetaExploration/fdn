@@ -1,7 +1,6 @@
-import { Avatar, Box, useTheme } from "degen";
+import { Avatar, Box, Stack, Text } from "degen";
 import React from "react";
 import { notifPreferences } from "../../utils/types/discord";
-import ReactTooltip from 'react-tooltip';
 
 
 export default function GuildElem({ id, name, icon, notifPreference, handleNotifPreferenceChange }) {
@@ -10,10 +9,17 @@ export default function GuildElem({ id, name, icon, notifPreference, handleNotif
     
     return (
         <>
-            <Box data-tip={name} onClick={() => handleNotifPreferenceChange(id)} width="20" height="20" margin="2" borderRadius="full" borderWidth="2" borderColor={notifPreference === notifPreferences.Important ? 'accent' : 'foregroundSecondary'} cursor="pointer" display="flex" justifyContent="center" alignItems="center">
-                <Avatar noBorder label={name} size="16" src={cdn} placeholder={icon === null}/>
+            <Box display="flex" margin="4" width="20" height="24">
+                <Stack space="0" align="center">
+                    <Box data-tip={name} onClick={() => handleNotifPreferenceChange(id)} width="20" height="20" borderRadius="full" borderWidth="2" borderColor={JSON.stringify(notifPreference) === JSON.stringify(notifPreferences.Important) ? 'accent' : 'foregroundSecondary'} cursor="pointer" display="flex" justifyContent="center" alignItems="center">
+                        <Avatar noBorder label={name} size="16" src={cdn} placeholder={icon === null}/>
+                    </Box>
+                    <Box width="16">
+                        <Text ellipsis variant="small"> {name} </Text>
+                    </Box>
+                </Stack>
             </Box>
-            <ReactTooltip place="bottom" effect="solid"/>
+            {/* <ReactTooltip place="bottom" effect="solid"/> */}
         </>
     )
 }
