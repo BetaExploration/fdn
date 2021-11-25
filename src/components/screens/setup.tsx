@@ -1,4 +1,4 @@
-import { Box, Button, IconSearch, Input, Skeleton, Stack, Text } from "degen";
+import { Box, Button, IconExclamation, IconSearch, Input, Skeleton, Stack, Text } from "degen";
 import React, { useEffect, useRef } from "react";
 import { useDiscord } from "../../utils/context/discord";
 import useModal from "../../utils/hooks/useModal";
@@ -44,7 +44,7 @@ export default function SetUp() {
                         <Input ref={input} placeholder="don't worry... we won't steal it :)" label={
                             <Stack align="center" direction="horizontal">
                                 <Text size="base" weight="medium"> {"your very secret internal access token please..."} </Text>
-                                <Button onClick={() => setModalOpen(true)} size="small" shape="circle" variant="transparent"><IconSearch/></Button>
+                                <Button onClick={() => setModalOpen(true)} size="small" shape="circle" variant="transparent"><IconExclamation/></Button>
                             </Stack>
                         }/>
                         <Button onClick={() => setUserToken(input.current.value)}> lez,go </Button>
