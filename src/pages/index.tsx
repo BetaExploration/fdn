@@ -7,7 +7,7 @@ import useModal from '../utils/hooks/useModal';
 
 export default function Home() {
 
-  const { logout } = useDiscord();
+  const { logout, userToken } = useDiscord();
   return (
     <div>
       <Head>
@@ -16,9 +16,9 @@ export default function Home() {
 
       <Box backgroundColor="background" minHeight="viewHeight" maxWidth="viewWidth" paddingX="32" paddingBottom="24">
           <Box display="flex" height="40" padding="8" justifyContent="flex-end" alignItems="center">
-            <Stack>
+            { userToken && <Stack>
               <Button onClick={() => {logout()}} variant="secondary" size="small" suffix={<IconClose/>}> stop using my token... </Button>
-            </Stack>
+            </Stack>}
           </Box>
           <Stack space='24'>
             <Stack>
@@ -29,6 +29,7 @@ export default function Home() {
               <Stack direction="horizontal" align="center">
                 <Text size="extraLarge" weight="medium" color="foreground"> {"let's fix that real quick:"} </Text>
               </Stack>
+
               <SetUp />
 
             </Stack>
