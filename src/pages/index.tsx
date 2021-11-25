@@ -1,13 +1,13 @@
-import { Box, Button, IconClose, Stack, Stat, Text } from 'degen';
+import { Box, Button, IconClose, IconSearch, Stack, Text } from 'degen';
 import Head from 'next/head';
-import React from 'react';
+import React, { useRef } from 'react';
 import SetUp from '../components/screens/setup';
 import { useDiscord } from '../utils/context/discord';
+import useModal from '../utils/hooks/useModal';
 
 export default function Home() {
 
   const { logout } = useDiscord();
-
   return (
     <div>
       <Head>
@@ -26,14 +26,15 @@ export default function Home() {
               <Text size="extraLarge"> so... f**k discord notifications... right?</Text>
             </Stack>
             <Stack space="8">
-              <Text size="extraLarge" weight="medium" color="foreground"> {"let's fix that real quick:"} </Text>
-
+              <Stack direction="horizontal" align="center">
+                <Text size="extraLarge" weight="medium" color="foreground"> {"let's fix that real quick:"} </Text>
+              </Stack>
               <SetUp />
 
             </Stack>
           </Stack>
       </Box>
-
     </div>
   )
 }
+
