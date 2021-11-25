@@ -71,8 +71,8 @@ export const DiscordProvider = ({children}) => {
                 setError(undefined);
             })
         }).catch(err => {
-            setError(err.message)
-            console.log(err)
+            (err.message !== 'Request failed with status code 429') && setError(err.message)
+            console.log(err.message)
             setLoading(false)
         })
     }
