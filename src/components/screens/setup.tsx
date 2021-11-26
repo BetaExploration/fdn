@@ -24,6 +24,7 @@ export default function SetUp() {
     }, [userToken, guilds, error, loadGuilds]);
 
     if (error && !loading && !guilds) {
+        window.scrollTo(0, 0)
         return <Error/>
     }
     
