@@ -68,9 +68,9 @@ export default function SetUp() {
 
                     <Stack align="center">
                         <Stack space="0" align="center">
-                            <Box width="12" height="12" borderRadius="full" backgroundColor="accent" cursor="pointer" display="flex" justifyContent="center" alignItems="center">
+                            <Box width={{xs: "8", md:"12"}} height={{xs: "8", md:"12"}} borderRadius="full" backgroundColor="accent" cursor="pointer" display="flex" justifyContent="center" alignItems="center">
                             </Box>
-                            <Text ellipsis variant="large"> important </Text>
+                            <Text ellipsis size={{xs: 'small', md: 'large'}}> important </Text>
                         </Stack>
                         <Skeleton loading={!important}>
                             <Image src={important} alt="" />
@@ -79,9 +79,9 @@ export default function SetUp() {
 
                     <Stack align="center">
                         <Stack space="0" align="center">
-                            <Box width="12" height="12" borderRadius="full" backgroundColor="foregroundSecondary" cursor="pointer" display="flex" justifyContent="center" alignItems="center">
+                            <Box width={{xs: "8", md:"12"}} height={{xs: "8", md:"12"}} borderRadius="full" backgroundColor="foregroundSecondary" cursor="pointer" display="flex" justifyContent="center" alignItems="center">
                             </Box>
-                            <Text ellipsis variant="large"> muted </Text>
+                            <Text ellipsis size={{xs: 'small', md: 'large'}}> muted </Text>
                         </Stack>
                         <Skeleton loading={!notImportant}>
                             <Image src={notImportant} alt="" />

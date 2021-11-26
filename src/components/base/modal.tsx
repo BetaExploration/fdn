@@ -20,14 +20,14 @@ export default function Modal ({wrapper, isOpen, children}) {
                     display: 'flex',
                     flex: 1,
                     justifyContent: 'center',
-                    alighItems: 'center',
+                    alignItems: 'center',
                     overflow: 'auto',
                     WebkitOverflowScrolling: 'touch',
                     border: 'none',
                     backgroundColor: 'transparent',
                 }
             }}>
-                <Box ref={wrapper} display="flex" width={{xs: 'max'}} maxWidth={{md: '1/2'}} backgroundColor="background" borderRadius="large" padding="12">
+                <Box ref={wrapper} display="flex" width={{xs: 'max'}} maxWidth={{md: '1/2'}} height="min" backgroundColor="background" borderRadius="large" padding="12">
                     { children ? children :
                         <Text> 
                             {"hey, you're not supposed to be here..."}
