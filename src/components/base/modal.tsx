@@ -27,16 +27,14 @@ export default function Modal ({wrapper, isOpen, children}) {
                     backgroundColor: 'transparent',
                 }
             }}>
-                <Box ref={wrapper} display="flex" maxWidth="1/2" backgroundColor="background" borderRadius="large" padding="12">
-                    <Stack>
-                        { children ? children :
-                            <Text> 
-                                {"hey, you're not supposed to be here..."}
-                                <br/>
-                                {"close this, the devs f**ed up"}
-                            </Text>
-                        }
-                    </Stack>
+                <Box ref={wrapper} display="flex" width={{xs: 'max'}} maxWidth={{md: '1/2'}} backgroundColor="background" borderRadius="large" padding="12">
+                    { children ? children :
+                        <Text> 
+                            {"hey, you're not supposed to be here..."}
+                            <br/>
+                            {"close this, the devs f**ed up"}
+                        </Text>
+                    }
                 </Box>
             </ReactModal>  
         </>

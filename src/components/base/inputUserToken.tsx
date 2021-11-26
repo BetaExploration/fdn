@@ -13,7 +13,7 @@ export default function InputUserToken() {
     
     return (
         <>
-            <Stack direction="horizontal" align="flex-end">
+            <Stack direction={{xs: 'vertical', md: 'horizontal'}} align={{xs: 'flex-start', md: 'flex-end'}}>
                 <Input ref={input} placeholder="don't worry... we won't steal it :)" label={
                     <Stack align="center" direction="horizontal">
                         <Text size="base" weight="medium"> {"your very secret internal access token please..."} </Text>

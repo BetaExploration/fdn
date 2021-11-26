@@ -51,10 +51,11 @@ export default function SetUp() {
                             </Box>
                         </Skeleton>
 
-                        <Stack>
-                            {updated && <Text> {"when you're ready... click save."}</Text> }
-                            <Button disabled={!guilds || !updated} loading={loading} onClick={() => (saveNotifPreferences())}> {updated ? 'save?' : 'nothing to change'} </Button>
-                        </Stack>
+                        <Box position={{xs: 'fixed', md: 'relative'}} bottom={{xs: '5'}} right={{xs: '5'}}>
+                            <Stack align={{xs: 'flex-end', md:'flex-start'}}>
+                                <Button disabled={!guilds || !updated} loading={loading} onClick={() => (saveNotifPreferences())}> save </Button>
+                            </Stack>
+                        </Box>
 
                     </Stack>
                 }
@@ -62,7 +63,7 @@ export default function SetUp() {
 
             <Modal wrapper={modal} isOpen={modalOpen}>
 
-                <Stack direction="horizontal">
+                <Stack direction={{ xs: 'vertical', md: 'horizontal'}}>
 
                     <Stack align="center">
                         <Stack space="0" align="center">
