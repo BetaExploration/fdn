@@ -72,7 +72,7 @@ export default function SetUp() {
                             </Box>
                             <Text ellipsis variant="large"> important </Text>
                         </Stack>
-                        <Image src={important} alt="" />
+                        {important && <Image src={important} alt="" />}
                     </Stack>
 
                     <Stack align="center">
@@ -81,7 +81,7 @@ export default function SetUp() {
                             </Box>
                             <Text ellipsis variant="large"> muted </Text>
                         </Stack>
-                        <Image src={notImportant} alt="" />
+                       {notImportant && <Image src={notImportant} alt="" />}
                     </Stack>
 
                 </Stack>
