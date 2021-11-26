@@ -15,7 +15,7 @@ export default function Home() {
       </Head>
 
       <Box backgroundColor="background" minHeight="viewHeight" maxWidth="viewWidth" paddingX={{xs: '6', md: "32"}} paddingBottom="24">
-          <Box display="flex" height="40" padding={{xs: '0', md: '8'}} justifyContent="flex-end" alignItems="center">
+          <Box display="flex" height={{xs: '20', md: '40'}} padding={{xs: '0', md: '8'}} justifyContent="flex-end" alignItems="center">
             { userToken && <Stack>
               <Button onClick={() => {logout()}} variant="secondary" size="small" suffix={<IconClose/>}> stop using my token... </Button>
             </Stack>}
