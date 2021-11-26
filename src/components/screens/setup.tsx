@@ -72,7 +72,9 @@ export default function SetUp() {
                             </Box>
                             <Text ellipsis variant="large"> important </Text>
                         </Stack>
-                        {important && <Image src={important} alt="" />}
+                        <Skeleton loading={!important}>
+                            <Image src={important} alt="" />
+                        </Skeleton>
                     </Stack>
 
                     <Stack align="center">
@@ -81,7 +83,9 @@ export default function SetUp() {
                             </Box>
                             <Text ellipsis variant="large"> muted </Text>
                         </Stack>
-                       {notImportant && <Image src={notImportant} alt="" />}
+                        <Skeleton loading={!notImportant}>
+                            <Image src={notImportant} alt="" />
+                        </Skeleton>
                     </Stack>
 
                 </Stack>
