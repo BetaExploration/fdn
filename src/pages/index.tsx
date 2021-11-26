@@ -14,18 +14,18 @@ export default function Home() {
         <title>FDN</title>
       </Head>
 
-      <Box backgroundColor="background" minHeight="viewHeight" maxWidth="viewWidth" paddingX="32" paddingBottom="24">
-          <Box display="flex" height="40" padding="8" justifyContent="flex-end" alignItems="center">
+      <Box backgroundColor="background" minHeight="viewHeight" maxWidth="viewWidth" paddingX={{xs: '6', md: "32"}} paddingBottom="24">
+          <Box display="flex" height={{xs: '20', md: '40'}} padding={{xs: '0', md: '8'}} justifyContent="flex-end" alignItems="center">
             { userToken && <Stack>
               <Button onClick={() => {logout()}} variant="secondary" size="small" suffix={<IconClose/>}> stop using my token... </Button>
             </Stack>}
           </Box>
-          <Stack space='24'>
+          <Stack space={{xs: '12', md: '24'}}>
             <Stack>
               <Text size="headingOne" weight="bold" color="foreground"> Hey! </Text>
               <Text size="extraLarge"> so... f**k discord notifications... right?</Text>
             </Stack>
-            <Stack space="8">
+            <Stack space={{xs: '4', md: '8'}}>
               <Stack direction="horizontal" align="center">
                 <Text size="extraLarge" weight="medium" color="foreground"> {"let's fix that real quick:"} </Text>
               </Stack>

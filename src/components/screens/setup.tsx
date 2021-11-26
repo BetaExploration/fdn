@@ -24,6 +24,7 @@ export default function SetUp() {
     }, [userToken, guilds, error, loadGuilds]);
 
     if (error && !loading && !guilds) {
+        window.scrollTo(0, 0)
         return <Error/>
     }
     
@@ -51,10 +52,11 @@ export default function SetUp() {
                             </Box>
                         </Skeleton>
 
-                        <Stack>
-                            {updated && <Text> {"when you're ready... click save."}</Text> }
-                            <Button disabled={!guilds || !updated} loading={loading} onClick={() => (saveNotifPreferences())}> {updated ? 'save?' : 'nothing to change'} </Button>
-                        </Stack>
+                        <Box position={{xs: 'fixed', md: 'relative'}} bottom={{xs: '5'}} right={{xs: '5'}}>
+                            <Stack align={{xs: 'flex-end', md:'flex-start'}}>
+                                <Button disabled={!guilds || !updated} loading={loading} onClick={() => (saveNotifPreferences())}> save </Button>
+                            </Stack>
+                        </Box>
 
                     </Stack>
                 }
@@ -62,24 +64,28 @@ export default function SetUp() {
 
             <Modal wrapper={modal} isOpen={modalOpen}>
 
-                <Stack direction="horizontal">
+                <Stack direction={{ xs: 'vertical', md: 'horizontal'}}>
 
                     <Stack align="center">
                         <Stack space="0" align="center">
-                            <Box width="12" height="12" borderRadius="full" backgroundColor="accent" cursor="pointer" display="flex" justifyContent="center" alignItems="center">
+                            <Box width={{xs: "8", md:"12"}} height={{xs: "8", md:"12"}} borderRadius="full" backgroundColor="accent" cursor="pointer" display="flex" justifyContent="center" alignItems="center">
                             </Box>
-                            <Text ellipsis variant="large"> important </Text>
+                            <Text ellipsis size={{xs: 'small', md: 'large'}}> important </Text>
                         </Stack>
-                        <Image src={important} alt="" />
+                        <Skeleton loading={!important}>
+                            <Image src={important} alt="" />
+                        </Skeleton>
                     </Stack>
 
                     <Stack align="center">
                         <Stack space="0" align="center">
-                            <Box width="12" height="12" borderRadius="full" backgroundColor="foregroundSecondary" cursor="pointer" display="flex" justifyContent="center" alignItems="center">
+                            <Box width={{xs: "8", md:"12"}} height={{xs: "8", md:"12"}} borderRadius="full" backgroundColor="foregroundSecondary" cursor="pointer" display="flex" justifyContent="center" alignItems="center">
                             </Box>
-                            <Text ellipsis variant="large"> muted </Text>
+                            <Text ellipsis size={{xs: 'small', md: 'large'}}> muted </Text>
                         </Stack>
-                        <Image src={notImportant} alt="" />
+                        <Skeleton loading={!notImportant}>
+                            <Image src={notImportant} alt="" />
+                        </Skeleton>
                     </Stack>
 
                 </Stack>
