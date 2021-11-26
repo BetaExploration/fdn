@@ -83,7 +83,7 @@ export const DiscordProvider = ({children}) => {
                 setGuilds(guilds.map(guild => ({
                     guild,
                     notifPreferences: notifPreferences.NotImportant
-                })));
+                })).sort((a: any, b: any) => a.guild.name.localeCompare(b.guild.name)));
                 setLoading(false);
                 setError(undefined);
                 setUpdated(true);
