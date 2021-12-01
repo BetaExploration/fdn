@@ -1,13 +1,14 @@
 import { Box, Button, IconClose, IconSearch, Stack, Text } from 'degen';
 import Head from 'next/head';
 import React, { useRef } from 'react';
+import Dashboard from '../components/screens/dashboard';
 import SetUp from '../components/screens/setup';
 import { useDiscord } from '../utils/context/discord';
 import useModal from '../utils/hooks/useModal';
 
 export default function Home() {
 
-  const { logout, userToken } = useDiscord();
+  const { logout, userToken, cachedGuilds } = useDiscord();
   return (
     <div>
       <Head>
@@ -29,8 +30,12 @@ export default function Home() {
               <Stack direction="horizontal" align="center">
                 <Text size="extraLarge" weight="medium" color="foreground"> {"let's fix that real quick:"} </Text>
               </Stack>
-
-              <SetUp />
+              
+              { !cachedGuilds ?
+                <SetUp/>
+              :
+                <Dashboard/>
+              }
 
             </Stack>
           </Stack>

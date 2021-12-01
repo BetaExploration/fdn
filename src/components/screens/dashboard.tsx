@@ -1,48 +1,92 @@
 import { Box, Button, Card, IconCheck, Stack, Tag, Text } from 'degen';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDiscord } from '../../utils/context/discord';
-import { notifPreferences } from '../../utils/types/discord';
+import { Guild, notifPreferences } from '../../utils/types/discord';
 import GuildElem from '../base/guildElem';
 import { Important } from '../base/important';
+import Error from '../base/error';
+import { compareNotifPreferences, toggleNotifPreference } from '../../utils/tools';
+import update from 'react-addons-update';
+
 
 
 export default function Dashboard() {
 
-    const { guilds, setGuilds, updateNotifPreferences } = useDiscord();
+    const { guilds, setGuilds, userToken, error, loading, loadGuilds, updated, setUpdated, saveNotifPreferences } = useDiscord();
+    const [ important, setImportant] = useState(undefined);
+    const [ notImportant, setNotImportant] = useState(undefined);
+    
+    useEffect(() => {
+        if (userToken && !guilds && !error) {
+            loadGuilds();
+        }
+        if (guilds && !updated) { 
+            setImportant(guilds.filter(guild => compareNotifPreferences(guild.notifPreferences, notifPreferences.Important)).sort((a: any, b: any) => a.guild.name.localeCompare(b.guild.name)))
+            setNotImportant(guilds.filter(guild => compareNotifPreferences(guild.notifPreferences, notifPreferences.NotImportant)).sort((a: any, b: any) => a.guild.name.localeCompare(b.guild.name)))
+        }
+    }, [userToken, guilds, error, loadGuilds, updated]);
+
+    if (error && !loading && !guilds) {
+        window.scrollTo(0, 0)
+        return <Error/>
+    }
+
+    const updateImportant = (guildId: string) => {
+        setImportant(important.map(guild => {
+            if (guild.guild.id === guildId) {
+                guild.notifPreferences = toggleNotifPreference(guild.notifPreferences);
+                setUpdated(true)
+            }
+            return guild
+        }))
+    }
+
+    const updateNotImportant = (guildId: string) => {
+        setNotImportant(notImportant.map(guild => {
+            if (guild.guild.id === guildId) {
+                guild.notifPreferences = toggleNotifPreference(guild.notifPreferences);
+                setUpdated(true)
+            }
+            return guild
+        }))
+    }
+
+    const confirmChanges = () => {
+        setGuilds(important.concat(notImportant));
+        saveNotifPreferences();
+    }
 
     return (
         <>
-            {guilds && 
+            {important && notImportant &&
                 <Stack space="12">
-                    <Stack>
-                        <Text size="large"> important servers </Text>
-                        <Important/>
-                        <Stack direction="horizontal">
-                            {guilds.map(guild => {
-                                if (guild.notifPreferences === notifPreferences.Important) {
-                                    console.log(guild);
+                    <Stack direction={{xs: 'vertical', md: 'horizontal'}}>
+                        <Box width="full" >
+                            <Text size="large"> important servers </Text>
+                            <Stack direction="horizontal" wrap>
+                                {important.map(guild => {
                                     return (
-                                        <GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateNotifPreferences(guild.guild.id)}/>
+                                        <GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateImportant(guild.guild.id)}/>
                                     )
-                                }
-                            })}
-                        </Stack>
-                    </Stack>
-                    <Stack>
-                        <Text size="large"> non-important servers </Text>
-                        <Important/>
-                        <Stack direction="horizontal">
-                            {guilds.map(guild => {
-                                console.log(guild.notifPreferences === notifPreferences.NotImportant)
-                                if (guild.notifPreferences === notifPreferences.NotImportant) {
-                                    console.log(guild);
+                                })}
+                            </Stack>
+                        </Box>
+                        <Box width="full">
+                            <Text size="large"> non-important servers </Text>
+                            <Stack direction="horizontal" wrap>
+                                {notImportant.map(guild => {
                                     return (
-                                        <GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateNotifPreferences(guild.guild.id)}/>
+                                        <GuildElem key={guild.guild.id} {...guild.guild} notifPreference={guild.notifPreferences} handleNotifPreferenceChange={() => updateNotImportant(guild.guild.id)}/>
                                     )
-                                }
-                            })}
-                        </Stack>
+                                })}
+                            </Stack>
+                        </Box>
                     </Stack>
+                    <Box position={{xs: 'fixed', md: 'relative'}} bottom={{xs: '5'}} right={{xs: '5'}}>
+                        <Stack align={{xs: 'flex-end', md:'flex-start'}}>
+                            <Button disabled={!guilds || !updated} loading={loading} onClick={() => confirmChanges()}> save </Button>
+                        </Stack>
+                    </Box>
                 </Stack>
             }
         </>

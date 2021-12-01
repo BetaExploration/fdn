@@ -54,7 +54,7 @@ export default function SetUp() {
 
                         <Box position={{xs: 'fixed', md: 'relative'}} bottom={{xs: '5'}} right={{xs: '5'}}>
                             <Stack align={{xs: 'flex-end', md:'flex-start'}}>
-                                <Button disabled={!guilds || !updated} loading={loading} onClick={() => (saveNotifPreferences())}> save </Button>
+                                <Button disabled={!guilds || !updated} loading={loading} onClick={() => (saveNotifPreferences())}> next </Button>
                             </Stack>
                         </Box>
 

@@ -2,6 +2,7 @@
 import React, { createContext, useEffect, useMemo, useState } from "react"
 import { getRawGuilds } from "../api/guilds"
 import { patchAllNotifSettings } from "../api/notifications"
+import { toggleNotifPreference } from "../tools"
 import { Guild, notifPreferences } from "../types/discord"
 
 
@@ -9,6 +10,9 @@ type DiscordContextValue = {
     /** List of guilds a user is a part of */
     guilds: Guild[];
     setGuilds(guilds: Guild[]): void;
+    /** List of guilds cached, will always match the notif. settings on discord */
+    cachedGuilds: Guild[];
+    setCachedGuilds(guilds: Guild[]): void;
     /** User's internal access Token */
     userToken: string;
     setUserToken(token: string): void;
@@ -21,6 +25,7 @@ type DiscordContextValue = {
     setError(error: string): void;
     /** local object has been updated */
     updated: boolean;
+    setUpdated(updated: boolean): void;
     /** method to update a guilds notif prefences locally */
     updateNotifPreferences(guildId: string): void;
     /** method to batch update all servers */
@@ -33,6 +38,7 @@ const DiscordContext = createContext<DiscordContextValue | null>(null)
 
 export const DiscordProvider = ({children}) => {
     const [guilds, setGuilds] = useState<Guild[]>(undefined)
+    const [cachedGuilds, setCachedGuilds] = useState<Guild[]>(undefined)
     const [userToken, setUserToken] = useState<string>(undefined)
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>(undefined)
@@ -41,7 +47,7 @@ export const DiscordProvider = ({children}) => {
     const updateNotifPreferences = (guildId: string) => {
         setGuilds(guilds.map(guild => {
             if (guild.guild.id === guildId) {
-                guild.notifPreferences = (JSON.stringify(guild.notifPreferences) === JSON.stringify(notifPreferences.Important)) ? notifPreferences.NotImportant : notifPreferences.Important;
+                guild.notifPreferences = toggleNotifPreference(guild.notifPreferences);
                 setUpdated(true)
             }
             return guild
@@ -57,10 +63,9 @@ export const DiscordProvider = ({children}) => {
             :
             guilds
 
-        console.log(guildsToUpdate);
         setLoading(true);
         patchAllNotifSettings(userToken, guildsToUpdate).then(() => {
-            localStorage.setItem('cachedGuilds', JSON.stringify(guilds))
+            setCachedGuilds(guilds.sort((a: any, b: any) => a.guild.name.localeCompare(b.guild.name)))
             setLoading(false);
             setUpdated(false);
             setError(undefined);
@@ -73,7 +78,6 @@ export const DiscordProvider = ({children}) => {
 
     const loadGuilds = () => {
         setLoading(true);
-        const cachedGuilds = JSON.parse(localStorage.getItem('cachedGuilds'))
         if (!guilds && cachedGuilds) {
             setGuilds(cachedGuilds);
             setLoading(false);
@@ -100,6 +104,7 @@ export const DiscordProvider = ({children}) => {
         localStorage.removeItem("userToken")
         localStorage.removeItem("cachedGuilds")
         setGuilds(undefined)
+        setCachedGuilds(undefined)
         setError(undefined);
         setLoading(false);
     }
@@ -118,9 +123,19 @@ export const DiscordProvider = ({children}) => {
         }
     }, [userToken])
 
+    useEffect(() => {
+        if (cachedGuilds) {
+            localStorage.setItem('cachedGuilds', JSON.stringify(cachedGuilds))
+        } else if (!cachedGuilds && JSON.parse(localStorage.getItem('cachedGuilds'))) {
+            setCachedGuilds(JSON.parse(localStorage.getItem('cachedGuilds')))
+        }
+    }, [cachedGuilds, guilds])
+
     const value = useMemo(() => ({
         guilds,
         setGuilds,
+        cachedGuilds,
+        setCachedGuilds,
         userToken,
         setUserToken, 
         logout,
@@ -129,11 +144,12 @@ export const DiscordProvider = ({children}) => {
         error,
         setError,
         updated,
+        setUpdated,
         updateNotifPreferences,
         saveNotifPreferences,
         loadGuilds
     }),
-    [guilds, userToken, logout, loading, error, updated, updateNotifPreferences, saveNotifPreferences, loadGuilds])
+    [guilds, userToken, logout, loading, error, updated, setUpdated, updateNotifPreferences, saveNotifPreferences, loadGuilds])
 
     return <DiscordContext.Provider value={value}>{children}</DiscordContext.Provider>
 }
