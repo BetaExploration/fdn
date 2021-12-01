@@ -12,7 +12,7 @@ export function Important () {
                 <Box display="flex" width="full" justifyContent="space-between" alignItems="center" paddingX="4" paddingY="1">
                     <Text size="large"> important servers </Text>
                     <Button variant="secondary" size="small" shape="square">
-                        {show ? <IconChevronDown /> : <IconChevronUp />}
+                        {show ? <IconChevronUp /> : <IconChevronDown />}
                     </Button>
                 </Box>
                 <Box width="full" display="flex" visibility={show ? "visible" : "hidden"} flexWrap="wrap" alignItems="center" >
@@ -34,7 +34,7 @@ export function NotImportant () {
                 <Box onClick={() => setShow(!show)}  display="flex" width="full" justifyContent="space-between" alignItems="center" paddingX="4" paddingY="1">
                     <Text size="large"> non-important servers </Text>
                     <Button variant="secondary" size="small" shape="square">
-                        {show ? <IconChevronDown /> : <IconChevronUp />}
+                        {show ? <IconChevronUp /> : <IconChevronDown />}
                     </Button>
                 </Box>
                 <Box width="full" display="flex" visibility={show ? "visible" : "hidden"} flexWrap="wrap" alignItems="center">
