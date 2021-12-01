@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDiscord } from '../../utils/context/discord';
 import { Guild, notifPreferences } from '../../utils/types/discord';
 import GuildElem from '../base/guildElem';
-import { Important } from '../base/important';
+import { Important, NotImportant } from '../base/notifPrefInfo';
 import Error from '../base/error';
 import { compareNotifPreferences, toggleNotifPreference } from '../../utils/tools';
 import update from 'react-addons-update';
@@ -61,8 +61,9 @@ export default function Dashboard() {
             {important && notImportant &&
                 <Stack space="12">
                     <Stack direction={{xs: 'vertical', md: 'horizontal'}}>
-                        <Box width="full" >
+                        <Box width="full">
                             <Text size="large"> important servers </Text>
+                            <Important />
                             <Stack direction="horizontal" wrap>
                                 {important.map(guild => {
                                     return (
@@ -73,6 +74,7 @@ export default function Dashboard() {
                         </Box>
                         <Box width="full">
                             <Text size="large"> non-important servers </Text>
+                            <NotImportant />
                             <Stack direction="horizontal" wrap>
                                 {notImportant.map(guild => {
                                     return (
