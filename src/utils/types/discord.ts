@@ -35,3 +35,10 @@ export const notifPreferences = {
   },
   Empty: {}
 } as const;
+
+export type view = | typeof views.setup | typeof views.dashboard;
+
+export const views = {
+  setup: "setup",
+  dashboard: "dashboard",
+} as const;

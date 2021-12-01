@@ -2449,7 +2449,7 @@ normalize-range@^0.1.2:
   resolved "https://registry.yarnpkg.com/normalize-range/-/normalize-range-0.1.2.tgz#2d10c06bdfd312ea9777695a4d28439456b75942"
   integrity sha1-LRDAa9/TEuqXd2laTShDlFa3WUI=
 
-object-assign@^4.1.1:
+object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
@@ -2871,6 +2871,13 @@ raw-body@2.4.1:
     http-errors "1.7.3"
     iconv-lite "0.4.24"
     unpipe "1.0.0"
+
+react-addons-update@^15.6.3:
+  version "15.6.3"
+  resolved "https://registry.yarnpkg.com/react-addons-update/-/react-addons-update-15.6.3.tgz#c449c309154024d04087b206d0400e020547b313"
+  integrity sha512-wBkjgx5cR0XTjZEz5jl2kScChrjI9T7rWVdaM0dLiIdHSgeHycLRdHPPiTgKk7vK18Od4rXmLJv91qofBXlE0A==
+  dependencies:
+    object-assign "^4.1.0"
 
 react-dom@^17.0.2:
   version "17.0.2"
