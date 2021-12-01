@@ -23,8 +23,8 @@ export function NotImportant () {
         <Box display="flex" flexWrap="wrap" alignItems="center" padding="2" marginTop="6" boxShadow="0" borderRadius="2xLarge" backgroundColor={mode === 'dark' ? 'black': 'white'}> 
                 <SettingBadge text="suppress @everyone and @here" active/>
                 <SettingBadge text="suppress all role @mentions" active/>
-                <SettingBadge text="mobile push notifications" active/>
-                <SettingBadge text="muted" active={false}/>
+                <SettingBadge text="mobile push notifications" active={false}/>
+                <SettingBadge text="muted" active/>
         </Box>
     )
 }
