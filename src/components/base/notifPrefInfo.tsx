@@ -21,10 +21,10 @@ export function NotImportant () {
     
     return (
         <Box display="flex" flexWrap="wrap" alignItems="center" padding="2" marginTop="6" boxShadow="0" borderRadius="2xLarge" backgroundColor={mode === 'dark' ? 'black': 'white'}> 
+                <SettingBadge text="muted" active/>
                 <SettingBadge text="suppress @everyone and @here" active/>
                 <SettingBadge text="suppress all role @mentions" active/>
                 <SettingBadge text="mobile push notifications" active={false}/>
-                <SettingBadge text="muted" active/>
         </Box>
     )
 }

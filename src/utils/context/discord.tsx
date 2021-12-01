@@ -3,7 +3,7 @@ import React, { createContext, useEffect, useMemo, useState } from "react"
 import { getRawGuilds } from "../api/guilds"
 import { patchAllNotifSettings } from "../api/notifications"
 import { toggleNotifPreference } from "../tools"
-import { Guild, notifPreferences } from "../types/discord"
+import { Guild, notifPreferences, view, views } from "../types/discord"
 
 
 type DiscordContextValue = {
@@ -26,6 +26,9 @@ type DiscordContextValue = {
     /** local object has been updated */
     updated: boolean;
     setUpdated(updated: boolean): void;
+    /** set view of app */
+    view: view;
+    setView(view: view): void;
     /** method to update a guilds notif prefences locally */
     updateNotifPreferences(guildId: string): void;
     /** method to batch update all servers */
@@ -43,6 +46,7 @@ export const DiscordProvider = ({children}) => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>(undefined)
     const [updated, setUpdated] = useState<boolean>(false)
+    const [ view, setView ] = useState<view>(views.setup)
 
     const updateNotifPreferences = (guildId: string) => {
         setGuilds(guilds.map(guild => {
@@ -107,6 +111,7 @@ export const DiscordProvider = ({children}) => {
         setCachedGuilds(undefined)
         setError(undefined);
         setLoading(false);
+        setView(views.setup);
     }
 
     useEffect(() => {
@@ -129,6 +134,9 @@ export const DiscordProvider = ({children}) => {
         } else if (!cachedGuilds && JSON.parse(localStorage.getItem('cachedGuilds'))) {
             setCachedGuilds(JSON.parse(localStorage.getItem('cachedGuilds')))
         }
+        if (cachedGuilds && view === views.setup) {
+            setView(views.dashboard);
+        }
     }, [cachedGuilds, guilds])
 
     const value = useMemo(() => ({
@@ -147,9 +155,11 @@ export const DiscordProvider = ({children}) => {
         setUpdated,
         updateNotifPreferences,
         saveNotifPreferences,
-        loadGuilds
+        loadGuilds,
+        view,
+        setView
     }),
-    [guilds, userToken, logout, loading, error, updated, setUpdated, updateNotifPreferences, saveNotifPreferences, loadGuilds])
+    [guilds, userToken, logout, loading, error, updated, setUpdated, updateNotifPreferences, saveNotifPreferences, loadGuilds, view, setView])
 
     return <DiscordContext.Provider value={value}>{children}</DiscordContext.Provider>
 }

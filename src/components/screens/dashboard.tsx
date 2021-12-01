@@ -1,18 +1,17 @@
-import { Box, Button, Card, IconCheck, Stack, Tag, Text } from 'degen';
+import { Box, Button, Stack, Text } from 'degen';
 import React, { useEffect, useState } from "react";
 import { useDiscord } from '../../utils/context/discord';
-import { Guild, notifPreferences } from '../../utils/types/discord';
+import { compareNotifPreferences, toggleNotifPreference } from '../../utils/tools';
+import { notifPreferences } from '../../utils/types/discord';
+import Error from '../base/error';
 import GuildElem from '../base/guildElem';
 import { Important, NotImportant } from '../base/notifPrefInfo';
-import Error from '../base/error';
-import { compareNotifPreferences, toggleNotifPreference } from '../../utils/tools';
-import update from 'react-addons-update';
 
 
 
 export default function Dashboard() {
 
-    const { guilds, setGuilds, userToken, error, loading, loadGuilds, updated, setUpdated, saveNotifPreferences } = useDiscord();
+    const { guilds, setGuilds, userToken, cachedGuilds, error, loading, loadGuilds, updated, setUpdated, saveNotifPreferences } = useDiscord();
     const [ important, setImportant] = useState(undefined);
     const [ notImportant, setNotImportant] = useState(undefined);
     
@@ -20,11 +19,11 @@ export default function Dashboard() {
         if (userToken && !guilds && !error) {
             loadGuilds();
         }
-        if (guilds && !updated) { 
+        if ((guilds && !important && !notImportant) ) { 
             setImportant(guilds.filter(guild => compareNotifPreferences(guild.notifPreferences, notifPreferences.Important)).sort((a: any, b: any) => a.guild.name.localeCompare(b.guild.name)))
             setNotImportant(guilds.filter(guild => compareNotifPreferences(guild.notifPreferences, notifPreferences.NotImportant)).sort((a: any, b: any) => a.guild.name.localeCompare(b.guild.name)))
         }
-    }, [userToken, guilds, error, loadGuilds, updated]);
+    }, [userToken, guilds, error, loadGuilds, important, notImportant, cachedGuilds, updated]);
 
     if (error && !loading && !guilds) {
         window.scrollTo(0, 0)
@@ -53,6 +52,8 @@ export default function Dashboard() {
 
     const confirmChanges = () => {
         setGuilds(important.concat(notImportant));
+        setImportant(undefined);
+        setNotImportant(undefined);
         saveNotifPreferences();
     }
 

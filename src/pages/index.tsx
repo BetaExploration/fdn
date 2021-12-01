@@ -5,10 +5,11 @@ import Dashboard from '../components/screens/dashboard';
 import SetUp from '../components/screens/setup';
 import { useDiscord } from '../utils/context/discord';
 import useModal from '../utils/hooks/useModal';
+import { views } from '../utils/types/discord';
 
 export default function Home() {
 
-  const { logout, userToken, cachedGuilds } = useDiscord();
+  const { logout, userToken, view } = useDiscord();
   return (
     <div>
       <Head>
@@ -31,7 +32,7 @@ export default function Home() {
                 <Text size="extraLarge" weight="medium" color="foreground"> {"let's fix that real quick:"} </Text>
               </Stack>
               
-              { !cachedGuilds ?
+              { view === views.setup ?
                 <SetUp/>
               :
                 <Dashboard/>

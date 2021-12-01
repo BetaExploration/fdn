@@ -9,13 +9,14 @@ import Modal from "../base/modal";
 import Image from 'next/image'
 import important from '../../../public/assets/preferences/important.png'
 import notImportant from '../../../public/assets/preferences/notImportant.png'
+import { views } from "../../utils/types/discord";
 
 export default function SetUp() {
 
     const modal = useRef(null);
     const { modalOpen, setModalOpen } = useModal(modal, false);
 
-    const {guilds, userToken, loading, error, updated, updateNotifPreferences, saveNotifPreferences, loadGuilds } = useDiscord();
+    const {guilds, userToken, loading, error, updated, updateNotifPreferences, loadGuilds, setView } = useDiscord();
 
     useEffect(() => {
         if (userToken && !guilds && !error) {
@@ -54,7 +55,7 @@ export default function SetUp() {
 
                         <Box position={{xs: 'fixed', md: 'relative'}} bottom={{xs: '5'}} right={{xs: '5'}}>
                             <Stack align={{xs: 'flex-end', md:'flex-start'}}>
-                                <Button disabled={!guilds || !updated} loading={loading} onClick={() => (saveNotifPreferences())}> next </Button>
+                                <Button disabled={!guilds || !updated} loading={loading} onClick={() => (setView(views.dashboard))}> next </Button>
                             </Stack>
                         </Box>
 
