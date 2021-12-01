@@ -1,10 +1,10 @@
-import { Box, Button, IconClose, IconSearch, Stack, Text } from 'degen';
+import { Box, Button, IconClose, IconCode, Stack, Text } from 'degen';
 import Head from 'next/head';
-import React, { useRef } from 'react';
+import React from 'react';
+import ReactTooltip from 'react-tooltip';
 import Dashboard from '../components/screens/dashboard';
 import SetUp from '../components/screens/setup';
 import { useDiscord } from '../utils/context/discord';
-import useModal from '../utils/hooks/useModal';
 import { views } from '../utils/types/discord';
 
 export default function Home() {
@@ -21,6 +21,11 @@ export default function Home() {
             { userToken && <Stack>
               <Button onClick={() => {logout()}} variant="secondary" size="small" suffix={<IconClose/>}> stop using my token... </Button>
             </Stack>}
+            <Box marginLeft="2">
+              <Button as="a" href="https://github.com/NoblePlace/fdn" target="_blank" variant="secondary" size="small" shape="square">
+                <IconCode/>
+              </Button>
+            </Box>
           </Box>
           <Stack space={{xs: '12', md: '24'}}>
             <Stack>

@@ -63,7 +63,6 @@ export default function Dashboard() {
                 <Stack space="12">
                     <Stack direction={{xs: 'vertical', md: 'horizontal'}}>
                         <Box width="full">
-                            <Text size="large"> important servers </Text>
                             <Important />
                             <Stack direction="horizontal" wrap>
                                 {important.map(guild => {
@@ -74,7 +73,6 @@ export default function Dashboard() {
                             </Stack>
                         </Box>
                         <Box width="full">
-                            <Text size="large"> non-important servers </Text>
                             <NotImportant />
                             <Stack direction="horizontal" wrap>
                                 {notImportant.map(guild => {
